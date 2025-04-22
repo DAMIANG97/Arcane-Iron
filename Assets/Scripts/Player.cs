@@ -10,7 +10,7 @@ public class Player : MonoBehaviour
     public int minDexterity = 5;
     public int minCharisma = 5;
     public int currentHp = 5;
-    public int hp = 5;
+    public int hp;
     public int strength = 5;
     public int dexterity = 5;
     public int charisma = 5;
@@ -22,8 +22,6 @@ public class Player : MonoBehaviour
 
     public int minFeaturePoints = 10;
     public int featurePoints = 10;
-
-
 
     void Start()
     {
@@ -44,6 +42,7 @@ public class Player : MonoBehaviour
         minPower = PlayerPrefs.GetInt("MinPower", minPower);
         hp = PlayerPrefs.GetInt("HP", hp);
         minFeaturePoints = PlayerPrefs.GetInt("MinFeaturePoints", minFeaturePoints);
+        gameObject.SetActive(false);
     }
 
     public void AddStrength()
@@ -61,7 +60,7 @@ public class Player : MonoBehaviour
         {
             dexterity++;
             featurePoints--;
-            Debug.Log("Increased Strength.");
+            Debug.Log("Increased Dexterity.");
         }
     }
     public void AddCharisma()
@@ -70,7 +69,7 @@ public class Player : MonoBehaviour
         {
             charisma++;
             featurePoints--;
-            Debug.Log("Increased Strength.");
+            Debug.Log("Increased Charisma.");
         }
     }
     public void AddIntelligence()
@@ -79,7 +78,7 @@ public class Player : MonoBehaviour
         {
             intelligence++;
             featurePoints--;
-            Debug.Log("Increased Strength.");
+            Debug.Log("Increased Intelligence.");
         }
     }
     public void AddPower()
@@ -88,12 +87,34 @@ public class Player : MonoBehaviour
         {
             power++;
             featurePoints--;
-            Debug.Log("Increased Strength.");
+            Debug.Log("Increased Power.");
         }
     }
+
+    public void TakeDamage(int damage)
+    {
+        currentHp -= damage;
+        if (currentHp < 0)
+        {
+            currentHp = 0;
+        }
+        PlayerPrefs.SetInt("CurrentHP", currentHp);
+        Debug.Log("Gracz otrzymał " + damage + " obrażeń. Aktualne HP: " + currentHp);
+    }
+
+    public void Heal(int amount)
+    {
+        currentHp += amount;
+        if (currentHp > hp)
+        {
+            currentHp = hp;
+        }
+        PlayerPrefs.SetInt("CurrentHP", currentHp);
+        Debug.Log("Gracz uleczony o " + amount + ". Aktualne HP: " + currentHp);
+    }
+
     public void Reset()
     {
-
         featurePoints = minFeaturePoints;
         strength = minStrength;
         power = minPower;
@@ -101,6 +122,7 @@ public class Player : MonoBehaviour
         dexterity = minDexterity;
         charisma = minCharisma;
     }
+
     public void Accept()
     {
         minFeaturePoints = featurePoints;
